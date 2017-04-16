@@ -23,8 +23,10 @@
                   (minutes mins)
                   secs)
                60
-               60)]
-    (str (pad hrs) ":" (pad mins) ":" (pad secs))))
+               60)
+        mm (if (> 12 hrs) "am" "pm")
+        mm-hrs (if (> 13 hrs) hrs (mod hrs 12))]
+    [:span mm-hrs ":" (pad mins) [:span.small mm]]))
 
 ;; home
 
@@ -32,18 +34,22 @@
   (let [time (re/subscribe [:time])]
     (fn []
       [:div
-        (str "Time: " (display-time @time))
-        [:button
-          {:on-click #(re/dispatch [:advance-time 30])}
-          "30 seconds"]
-
+        [:div.time (display-time @time)]
         [:button
           {:on-click #(re/dispatch [:advance-time (minutes 5)])}
           "5 minutes"]
 
         [:button
-          {:on-click #(re/dispatch [:advance-time (hours 7)])}
-          "7 hours"]])))
+          {:on-click #(re/dispatch [:advance-time (minutes 15)])}
+          "15 minutes"]
+
+        [:button
+          {:on-click #(re/dispatch [:advance-time (hours 1)])}
+          "1 hour"]
+
+        [:button
+          {:on-click #(re/dispatch [:advance-time (hours 8)])}
+          "8 hours"]])))
 
 
 
