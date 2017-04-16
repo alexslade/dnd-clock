@@ -11,3 +11,9 @@
  :set-active-panel
  (fn [db [_ active-panel]]
    (assoc db :active-panel active-panel)))
+
+(re-frame/reg-event-db
+ :advance-time
+ (fn [db [_ seconds]]
+   (update-in db [:time] + seconds)))
+
