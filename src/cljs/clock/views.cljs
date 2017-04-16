@@ -28,37 +28,57 @@
         mm-hrs (if (> 13 hrs) hrs (mod hrs 12))]
     [:span mm-hrs ":" (pad mins) [:span.small mm]]))
 
-;; home
+;; home-panel
 
-(defn home-panel []
+(defn clock-panel []
   (let [time (re/subscribe [:time])]
     (fn []
       [:div
-        [:div.time (display-time @time)]
-        [:button
-          {:on-click #(re/dispatch [:advance-time (minutes 5)])}
-          "5 minutes"]
+        [:div.version
+          "Version 0.1.0-alpha — "
+          [:a {:href "#/"} "Read more"]]
+        [:div.clock
+          [:div.time (display-time @time)]
+          [:div.minutes
+            [:button
+              {:on-click #(re/dispatch [:advance-time (minutes 5)])}
+              "+ 5 minutes"]
 
-        [:button
-          {:on-click #(re/dispatch [:advance-time (minutes 15)])}
-          "15 minutes"]
+            [:button
+              {:on-click #(re/dispatch [:advance-time (minutes 15)])}
+              "+ 15 minutes"]]
+          [:div.hours
+            [:button
+              {:on-click #(re/dispatch [:advance-time (hours 1)])}
+              "+ 1 hour"]
 
-        [:button
-          {:on-click #(re/dispatch [:advance-time (hours 1)])}
-          "1 hour"]
-
-        [:button
-          {:on-click #(re/dispatch [:advance-time (hours 8)])}
-          "8 hours"]])))
+            [:button
+              {:on-click #(re/dispatch [:advance-time (hours 8)])}
+              "+ 8 hours"]]]])))
 
 
 
-;; about
+;; home
 
-(defn about-panel []
+(defn home-panel []
   (fn []
-    [:div "This is the About Page."
-     [:div [:a {:href "#/"} "go to Home Page"]]]))
+    [:div
+      [:div [:a {:href "#/clock"} "Start using the Clock"]]
+      [:h1 "RPG clock - prototype"]
+      [:p "This is the first draft of a tool to help track time during campaigns. Rather than ticking along, the DM (or a designated player) is in control of progressing time. Please give feedback, and consider " [:strong "everything"] " experimental."]
+      [:h2 "TODO (in current priority order - please request changes)"]
+      [:ul
+        [:li "[x] Basic 12-h clock with increment buttons"]
+        [:li "[ ] Sync across multiple screens. I.e. DM controls via a phone, players see time on an iPad or TV."]
+        [:li "[ ] Nicer styling, with mobile support"]
+        [:li "[ ] Date tracking (Does this need custom date formats to suit different worlds?)"]]
+
+
+      [:h2 "Release notes"]
+      [:h3 "Version 0.1.0-alpha"]
+      [:ul
+        [:li "A first prototype. No styles, probably broken in some way, needs plenty of further work."]]]))
+
 
 
 ;; main
@@ -66,7 +86,7 @@
 (defn- panels [panel-name]
   (case panel-name
     :home-panel [home-panel]
-    :about-panel [about-panel]
+    :clock-panel [clock-panel]
     [:div]))
 
 (defn show-panel [panel-name]
